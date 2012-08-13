@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}All Blogs Displayed{% endblock %}
+
+{% block content %}
+    {% if entries %}
+        <ul>
+            {% for blog in entries %}
+                <li>
+                    <h2>{{ blog.title }}</h2>
+                    <p>{{ blog.created }}</p>
+                    <p>{{ blog.creator }}</p>
+                    <p>{{ blog.body }}<p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No blogs to display</p>
+    {% endif %}
+{% endblock %}
