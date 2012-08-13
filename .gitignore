@@ -1,0 +1,6 @@
+settings.py
+*.py[co]
+*.sw[po]
+.DS_Store
+*~
+*.mo
