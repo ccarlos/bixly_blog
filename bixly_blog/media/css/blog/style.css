@@ -1,0 +1,39 @@
+header {
+    padding: 2em 11em;
+}
+header.base {
+    background: none repeat scroll 0 0 #667755;
+    padding: 2em 11em;
+}
+header.base h1{
+    text-align: center;
+}
+nav.base ul{
+    list-style-type:none;
+    margin:0;
+    padding:15px;
+    text-align: center;
+}
+nav.base ul li{
+    display:inline;
+}
+article {
+    padding: 20px 20px;
+    border: 1px solid black;
+}
+#content .entry .h-entry h1{
+    text-align: center;
+}
+#content .entry .h-entry h3{
+    text-align: center;
+    font-style: italic;
+}
+#content .entry p{
+    margin-left: 20px;
+    text-indent: 1.5em;
+    border: 1px solid green;
+    font-style: bold;
+}
+footer p{
+    text-align: right;
+}

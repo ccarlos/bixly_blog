@@ -4,16 +4,16 @@
 
 {% block content %}
     {% if entries %}
-        <ul>
-            {% for blog in entries %}
-                <li>
-                    <h2>{{ blog.title }}</h2>
-                    <p>{{ blog.created }}</p>
-                    <p>{{ blog.creator }}</p>
-                    <p>{{ blog.body }}<p>
-                </li>
-            {% endfor %}
-        </ul>
+        {% for blog in entries %}
+            <article class="entry">
+                <header class="h-entry">
+                    <h1>{{ blog.title }}</h1>
+                    <h3>By: {{ blog.creator }}</h3>
+                    <h3>Published: {{ blog.created|date:"M-d-Y" }}</h3>
+                </header>
+                <p>{{ blog.body }}<p>
+            </article>
+        {% endfor %}
     {% else %}
         <p>No blogs to display</p>
     {% endif %}
