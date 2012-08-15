@@ -22,19 +22,20 @@
         </ul>
     </nav>
     {% endblock %}
-    <form action="{% url blog.filter %}" method="GET">
+    <form action="{% url blog.process_filter %}" method="GET">
       Year
       <select name="year">
+        {# TODO: Figure out why selected isn't working in if statement #}
         <option value="" selected="selected"></option>
         {% for year in blog_info.years %}
-        <option value="{{ year }}">{{ year }}</option>
+        <option value="{{ year }}" {% if year == yr_sel %}selected{% endif %}>{{ year }}</option>
         {% endfor %}
       </select>
       Month
       <select name="month">
         <option value="" selected="selected"></option>
         {% for month in blog_info.months %}
-        <option value="{{ forloop.counter }}">{{ month }}</option>
+        <option value="{{ forloop.counter }}" {% if month == mon_sel %}selected{% endif %}>{{ month }}</option>
         {% endfor %}
       </select>
       <input type="submit" value="Go"/>
@@ -50,6 +51,9 @@
     <div id="content">
         {% block content %}{% endblock %}
     </div>
+
+    {% block pagination %}
+    {% endblock %}
 
     {% block footer %}
     <footer>

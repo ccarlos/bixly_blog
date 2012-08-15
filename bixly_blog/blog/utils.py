@@ -1,5 +1,8 @@
 import datetime
 
+from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from bixly_blog.blog.models import BlogEntry
 
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -29,3 +32,19 @@ def get_blog_info():
     dates = BlogEntry.objects.dates('created', 'year', order='DESC')
     years = [y.year for y in dates]
     return {'months': MONTHS, 'years': years}
+
+
+def paginate_objects(request, objs):
+    paginator = Paginator(objs, settings.ENTRIES_PER_PAGE)
+
+    page = request.GET.get('page')
+    try:
+        ents = paginator.page(page)
+    except PageNotAnInteger:
+        # Deliver first page.
+        ents = paginator.page(1)
+    except EmptyPage:
+        # Out of range, deliver last page.
+        ents = paginator.page(paginator.num_pages)
+
+    return ents
