@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     (r'^login/$', 'django.contrib.auth.views.login'),
     (r'^logout/$', 'django.contrib.auth.views.logout_then_login'),
     (r'^blog/', include('bixly_blog.blog.urls')),
+    (r'^comments/', include('django.contrib.comments.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

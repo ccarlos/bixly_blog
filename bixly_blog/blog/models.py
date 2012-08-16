@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 
@@ -11,6 +12,9 @@ class BlogEntry(models.Model):
 
     def __unicode__(self):
         return '%s wrote on %s' % (self.creator, self.created)
+
+    def get_absolute_url(self):
+        return reverse('blog.single', kwargs={'entry_pk': self.pk})
 
     class Meta(object):
         verbose_name = 'Blog entry'

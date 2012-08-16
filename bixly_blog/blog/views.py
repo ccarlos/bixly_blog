@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.http import require_http_methods
 
 from bixly_blog.blog.models import BlogEntry
@@ -109,4 +109,12 @@ def new(request):
     data = {'form': form, 'blog_info': get_blog_info()}
     data.update(csrf(request))
     return render_to_response('blog/new_blog.html', data,
+                              context_instance=get_rq(request))
+
+
+def single(request, entry_pk=None):
+    entry = get_object_or_404(BlogEntry, pk=entry_pk)
+
+    data = {'entry': entry, 'blog_info': get_blog_info()}
+    return render_to_response('blog/single.html', data,
                               context_instance=get_rq(request))
