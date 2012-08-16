@@ -2,6 +2,7 @@ import datetime
 
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.template import RequestContext
 
 from bixly_blog.blog.models import BlogEntry
 
@@ -48,3 +49,8 @@ def paginate_objects(request, objs):
         ents = paginator.page(paginator.num_pages)
 
     return ents
+
+
+def get_rq(request):
+    """Populate RequestContext with the logged in User."""
+    return RequestContext(request, {'user': request.user})

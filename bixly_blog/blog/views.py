@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -6,20 +7,23 @@ from django.views.decorators.http import require_http_methods
 
 from bixly_blog.blog.models import BlogEntry
 from bixly_blog.blog.utils import (smart_int, check_ranges, get_blog_info,
-                                   paginate_objects)
+                                   paginate_objects, get_rq)
 from bixly_blog.blog.forms import BlogEntryForm
 
 
+@login_required
 def list_all(request):
     """List all blog entries stored in our database."""
     entries = BlogEntry.objects.all().order_by('-created')
     data = {'entries': paginate_objects(request, entries),
             'blog_info': get_blog_info()}
 
-    return render_to_response('list_all.html', data)
+    return render_to_response('blog/list_all.html', data,
+                              context_instance=get_rq(request))
 
 
 @require_http_methods(['GET'])
+@login_required
 def process_filter(request):
     """Determine which url to redirect user to, given GET variables."""
 
@@ -43,7 +47,8 @@ def process_filter(request):
     data = {'blog_info': get_blog_info(), 'errors': errors, 'mon_sel': month,
             'yr_sel': year}
     if errors:
-        return render_to_response('list_all.html', data)
+        return render_to_response('blog/list_all.html', data,
+                                  context_instance=get_rq(request))
 
     kwargs = {}
     url_str = ''
@@ -57,6 +62,7 @@ def process_filter(request):
     return HttpResponseRedirect(reverse(url_str, kwargs=kwargs))
 
 
+@login_required
 def filter(request, year=None, month=None):
     """Allow users to filter entries by year or year & month."""
 
@@ -82,11 +88,12 @@ def filter(request, year=None, month=None):
         entries = BlogEntry.objects.filter(**kwargs).order_by('-created')
         data.update({'entries': paginate_objects(request, entries)})
 
-    return render_to_response('list_all.html', data)
+    return render_to_response('blog/list_all.html', data,
+                              context_instance=get_rq(request))
 
 
 @require_http_methods(['GET', 'POST'])
-#@login_required(login_url='//'
+@login_required
 def new(request):
     """Create a new BlogEntry for today."""
 
@@ -101,4 +108,5 @@ def new(request):
 
     data = {'form': form, 'blog_info': get_blog_info()}
     data.update(csrf(request))
-    return render_to_response('new_blog.html', data)
+    return render_to_response('blog/new_blog.html', data,
+                              context_instance=get_rq(request))

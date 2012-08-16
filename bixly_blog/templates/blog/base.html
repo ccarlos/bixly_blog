@@ -17,8 +17,10 @@
     {% block navigation %}
     <nav class="base">
         <ul>
+            <li><p>Welcome, {{ user.username }}</p></li>
             <li><a href="{% url blog.list_all %}">Blogs</a></li>
             <li><a href="{% url blog.new %}">Create</a></li>
+            <li><a href="{% url django.contrib.auth.views.logout_then_login %}">Logout</a></li>
         </ul>
     </nav>
     {% endblock %}

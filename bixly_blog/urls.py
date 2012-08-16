@@ -9,6 +9,9 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'bixly_blog.views.home', name='home'),
     # url(r'^bixly_blog/', include('bixly_blog.foo.urls')),
+    (r'^$', 'django.contrib.auth.views.login'),
+    (r'^login/$', 'django.contrib.auth.views.login'),
+    (r'^logout/$', 'django.contrib.auth.views.logout_then_login'),
     (r'^blog/', include('bixly_blog.blog.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
