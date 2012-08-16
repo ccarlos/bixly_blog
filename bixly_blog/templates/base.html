@@ -17,8 +17,8 @@
     {% block navigation %}
     <nav class="base">
         <ul>
-            <li><a href='/blog/'>Blogs</a></li>
-            <li><a href='/new/'>Create</a></li>
+            <li><a href="{% url blog.list_all %}">Blogs</a></li>
+            <li><a href="{% url blog.new %}">Create</a></li>
         </ul>
     </nav>
     {% endblock %}

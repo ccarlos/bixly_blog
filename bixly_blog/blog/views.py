@@ -1,11 +1,13 @@
+from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_http_methods
 
 from bixly_blog.blog.models import BlogEntry
 from bixly_blog.blog.utils import (smart_int, check_ranges, get_blog_info,
                                    paginate_objects)
+from bixly_blog.blog.forms import BlogEntryForm
 
 
 def list_all(request):
@@ -17,7 +19,7 @@ def list_all(request):
     return render_to_response('list_all.html', data)
 
 
-@require_GET
+@require_http_methods(['GET'])
 def process_filter(request):
     """Determine which url to redirect user to, given GET variables."""
 
@@ -81,3 +83,22 @@ def filter(request, year=None, month=None):
         data.update({'entries': paginate_objects(request, entries)})
 
     return render_to_response('list_all.html', data)
+
+
+@require_http_methods(['GET', 'POST'])
+#@login_required(login_url='//'
+def new(request):
+    """Create a new BlogEntry for today."""
+
+    if request.method == 'POST':
+        data = request.POST
+        form = BlogEntryForm(creator=request.user, data=data)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('blog.list_all'))
+    else:
+        form = BlogEntryForm(creator=request.user)
+
+    data = {'form': form, 'blog_info': get_blog_info()}
+    data.update(csrf(request))
+    return render_to_response('new_blog.html', data)
