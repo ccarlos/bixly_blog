@@ -24,7 +24,7 @@ class BlogEntry(models.Model):
     title = models.CharField(max_length=200)
     body = models.TextField(max_length=1000)
     created = models.DateTimeField(default=timezone.now)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
     def __unicode__(self):
         return '%s wrote on %s' % (self.creator, self.created)

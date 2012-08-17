@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.http import require_http_methods
@@ -129,4 +130,29 @@ def tagged_entries(request, tag_pk=None):
             'blog_info': get_blog_info()}
 
     return render_to_response('blog/tag_search.html', data,
+                              context_instance=get_rq(request))
+
+
+def search(request):
+    """Perform a query agaist a BlogEntry title and body.
+
+    Supports Boolean Full-Text Searches. Refer to:
+    http://dev.mysql.com/doc/refman/4.1/en/fulltext-boolean.html
+
+    """
+    query = request.GET.get('q', '')
+
+    if query:
+        q1 = Q(title__search=query)
+        q2 = Q(body__search=query)
+
+        results = BlogEntry.objects.filter(q1 | q2).order_by(
+            '-created').distinct()
+    else:
+        results = []
+
+    data = {'entries': paginate_objects(request, results), 'query': query,
+            'blog_info': get_blog_info()}
+
+    return render_to_response('blog/search.html', data,
                               context_instance=get_rq(request))

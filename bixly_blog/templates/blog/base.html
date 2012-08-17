@@ -24,6 +24,13 @@
         </ul>
     </nav>
     {% endblock %}
+
+    <form action="{% url blog.search %}" method="GET">
+      <label for="q">Search: </label>
+      <input type="text" name="q" value="{{ query }}">
+      <input type="submit" value="Search">
+    </form>
+
     <form action="{% url blog.choose_filter %}" method="GET">
       Year
       <select name="year">

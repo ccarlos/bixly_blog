@@ -1,0 +1,45 @@
+{# vim: set ts=2 et sts=2 sw=2: #}
+{% extends "blog/base.html" %}
+
+{% load comments %}
+
+{% block title %}Search results for: {{ query }}{% endblock %}
+
+{% block content %}
+    {% if entries %}
+        <p>Search results for: {{ query }}</p>
+        {% for blog in entries %}
+            <article class="entry">
+                <header class="h-entry">
+                    <h1><a href="{% url blog.single blog.pk %}">{{ blog.title }}</a></h1>
+                    <h3>By: {{ blog.creator }}</h3>
+                    <h3>Published: {{ blog.created|date:"M-d-Y" }}</h3>
+                    {% get_comment_count for blog as c_count %}
+                    <h3>{{ c_count }} comments.</h3>
+                </header>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>No blogs to display</p>
+    {% endif %}
+{% endblock %}
+
+{% block pagination %}
+  {% if entries %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if entries.has_previous %}
+                <a href="?page={{ entries.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ entries.number }} of {{ entries.paginator.num_pages }}.
+            </span>
+
+            {% if entries.has_next %}
+                <a href="?page={{ entries.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+  {% endif %}
+{% endblock %}
