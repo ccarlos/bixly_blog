@@ -16,7 +16,7 @@
               <h3>By: {{ entry.creator }}</h3>
               <h3>Published: {{ entry.created|date:"M-d-Y" }}</h3>
           </header>
-          <p>{{ entry.body }}<p>
+          <p>{{ entry.body|safe }}<p>
           <p>Tags:
             {% for tag in entry.tags.all %}
               <ul>

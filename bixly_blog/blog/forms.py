@@ -18,10 +18,12 @@ class BlogEntryForm(forms.ModelForm):
     def __init__(self, creator, data=None, *args, **kwargs):
         self.creator = creator
         self.tags = ''
+        self.is_markdown = False
         if data:
             data = data.copy()
             data.update({'creator': creator.pk})
             self.tags = data.get('tags')
+            self.is_markdown = True if 'is_markdown' in data else False
         super(BlogEntryForm, self).__init__(data=data, *args, **kwargs)
 
     def save(self, commit=True, *args, **kwargs):
@@ -31,6 +33,7 @@ class BlogEntryForm(forms.ModelForm):
             return entry
 
         entry.creator = self.creator
+        entry.is_markdown = self.is_markdown
         entry.save()
 
         # TAGS processing. Associate tags with given BlogEntry.

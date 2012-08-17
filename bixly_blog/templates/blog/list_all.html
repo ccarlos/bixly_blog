@@ -14,7 +14,7 @@
                     <h3>By: {{ blog.creator }}</h3>
                     <h3>Published: {{ blog.created|date:"M-d-Y" }}</h3>
                 </header>
-                <p>{{ blog.body }}<p>
+                <p>{{ blog.body|safe }}<p>
                 {% get_comment_count for blog as c_count %}
                 <p>{{ c_count }} comments. <a href="{% url blog.single blog.pk %}">Add Comment</a></p>
             </article>
