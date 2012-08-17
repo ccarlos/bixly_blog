@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.http import require_http_methods
 
-from bixly_blog.blog.models import BlogEntry
+from bixly_blog.blog.models import BlogEntry, Tag
 from bixly_blog.blog.utils import (smart_int, check_ranges, get_blog_info,
                                    paginate_objects, get_rq)
 from bixly_blog.blog.forms import BlogEntryForm
@@ -14,7 +14,7 @@ from bixly_blog.blog.forms import BlogEntryForm
 @login_required
 def list_all(request):
     """List all blog entries stored in our database."""
-    entries = BlogEntry.objects.all().order_by('-created')
+    entries = BlogEntry.objects.all()
     data = {'entries': paginate_objects(request, entries),
             'blog_info': get_blog_info()}
 
@@ -24,7 +24,7 @@ def list_all(request):
 
 @require_http_methods(['GET'])
 @login_required
-def process_filter(request):
+def choose_filter(request):
     """Determine which url to redirect user to, given GET variables."""
 
     year = request.GET.get('year', None)
@@ -85,7 +85,7 @@ def filter(request, year=None, month=None):
             'yr_sel': year}
 
     if not errors:
-        entries = BlogEntry.objects.filter(**kwargs).order_by('-created')
+        entries = BlogEntry.objects.filter(**kwargs)
         data.update({'entries': paginate_objects(request, entries)})
 
     return render_to_response('blog/list_all.html', data,
@@ -117,4 +117,16 @@ def single(request, entry_pk=None):
 
     data = {'entry': entry, 'blog_info': get_blog_info()}
     return render_to_response('blog/single.html', data,
+                              context_instance=get_rq(request))
+
+
+def tagged_entries(request, tag_pk=None):
+    """Given a tag, return all BlogEntry's sharing that tag."""
+    tag = get_object_or_404(Tag, pk=tag_pk)
+
+    entries = tag.blogentry_set.all()
+    data = {'entries': paginate_objects(request, entries), 'tag': tag,
+            'blog_info': get_blog_info()}
+
+    return render_to_response('blog/tag_search.html', data,
                               context_instance=get_rq(request))

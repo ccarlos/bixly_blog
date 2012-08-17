@@ -24,7 +24,7 @@
         </ul>
     </nav>
     {% endblock %}
-    <form action="{% url blog.process_filter %}" method="GET">
+    <form action="{% url blog.choose_filter %}" method="GET">
       Year
       <select name="year">
         {# TODO: Figure out why selected isn't working in if statement #}

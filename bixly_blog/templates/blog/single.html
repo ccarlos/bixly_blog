@@ -17,6 +17,13 @@
               <h3>Published: {{ entry.created|date:"M-d-Y" }}</h3>
           </header>
           <p>{{ entry.body }}<p>
+          <p>Tags:
+            {% for tag in entry.tags.all %}
+              <ul>
+                <li><a href="{% url blog.tagged tag.pk %}">{{ tag.tag }}</a></li>
+              </ul>
+            {% endfor %}
+          </p>
       </article>
       {% get_comment_form for entry as form %}
       <div id="stylized" class="myform">

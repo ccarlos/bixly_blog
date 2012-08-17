@@ -8,5 +8,6 @@ urlpatterns = patterns('bixly_blog.blog.views',
     url(r'^filter/(?P<year>\d+)/(?P<month>\d+)$', 'filter',
         name='blog.filter_year_month'),
     url(r'^filter/(?P<year>\d+)/$', 'filter', name='blog.filter_year'),
-    url(r'^p_filter$', 'process_filter', name='blog.process_filter'),
+    url(r'^c_filter$', 'choose_filter', name='blog.choose_filter'),
+    url(r'^tagged/(?P<tag_pk>\d+)$', 'tagged_entries', name='blog.tagged'),
 )

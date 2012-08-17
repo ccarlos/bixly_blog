@@ -1,6 +1,7 @@
 from django import forms
 
 from bixly_blog.blog.models import BlogEntry
+from bixly_blog.blog.utils import process_tags
 
 
 class BlogEntryForm(forms.ModelForm):
@@ -16,16 +17,24 @@ class BlogEntryForm(forms.ModelForm):
 
     def __init__(self, creator, data=None, *args, **kwargs):
         self.creator = creator
+        self.tags = ''
         if data:
             data = data.copy()
             data.update({'creator': creator.pk})
+            self.tags = data.get('tags')
         super(BlogEntryForm, self).__init__(data=data, *args, **kwargs)
 
     def save(self, commit=True, *args, **kwargs):
         entry = super(BlogEntryForm, self).save(*args, commit=False, **kwargs)
 
-        if commit:
-            entry.creator = self.creator
-            entry.save()
+        if not commit:
+            return entry
+
+        entry.creator = self.creator
+        entry.save()
+
+        # TAGS processing. Associate tags with given BlogEntry.
+        if self.tags:
+            process_tags(entry.pk, self.tags)
 
         return entry

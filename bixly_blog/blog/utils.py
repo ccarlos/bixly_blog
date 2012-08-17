@@ -2,6 +2,7 @@ import datetime
 
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 
 from bixly_blog.blog.models import BlogEntry
@@ -54,3 +55,17 @@ def paginate_objects(request, objs):
 def get_rq(request):
     """Populate RequestContext with the logged in User."""
     return RequestContext(request, {'user': request.user})
+
+
+def process_tags(entry_pk, tags_str):
+    """Associate tags with a BlogEntry.
+
+    tags_str - a string of comma separated tags.
+    """
+
+    entry = get_object_or_404(BlogEntry, pk=entry_pk)
+
+    tag_list = [s.strip() for s in tags_str.split(',')]
+
+    for tg in tag_list:
+        entry.tags.create(tag=tg)
