@@ -12,8 +12,9 @@
 
   <form method="POST" action="{% url blog.new %}">
     {% csrf_token %}
-    <div>{{ form.title.errors }} Title:{{ form.title }}</div>
-    <div>{{ form.body.errors }} Body:{{ form.body }}</div>
+    <p>Create an entry today...</p>
+    <div>{{ form.title.errors }} {{ form.title }}</div>
+    <div>{{ form.body.errors }} {{ form.body }}</div>
     <div>Is Markdown?<input type="checkbox" name="is_markdown"/></div>
     <div>Comma Seperated Tags: <input id="id_tags" type="text" maxlength="200" name="tags"></div>
     <ul>

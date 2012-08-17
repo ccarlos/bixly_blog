@@ -17,20 +17,25 @@
     {% block navigation %}
     <nav class="base">
         <ul>
-            <li><p>Welcome, {{ user.username }}</p></li>
+            <li><p>Welcome: {% if user.is_anonymous %}Guest{% else %}{{ user.username }}{% endif %}</p></li>
             <li><a href="{% url blog.list_all %}">Blogs</a></li>
             <li><a href="{% url blog.new %}">Create</a></li>
+            {% if not user.is_authenticated %}
+            <li><a href="{% url django.contrib.auth.views.login %}">Login</a></li>
+            {% else %}
             <li><a href="{% url django.contrib.auth.views.logout_then_login %}">Logout</a></li>
+            {% endif %}
         </ul>
     </nav>
     {% endblock %}
 
     <form action="{% url blog.search %}" method="GET">
-      <label for="q">Search: </label>
+      <label for="q">Search Blogs: </label>
       <input type="text" name="q" value="{{ query }}">
       <input type="submit" value="Search">
     </form>
 
+    <h2>Filter Blog Entries.</h2>
     <form action="{% url blog.choose_filter %}" method="GET">
       Year
       <select name="year">

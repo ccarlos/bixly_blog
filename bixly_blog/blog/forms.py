@@ -5,7 +5,8 @@ from bixly_blog.blog.utils import process_tags
 
 
 class BlogEntryForm(forms.ModelForm):
-    title = forms.CharField(max_length=200)
+    title = forms.CharField(max_length=200, widget=forms.TextInput(
+        attrs={'placeholder': 'Enter your Blog\'s title'}))
     body = forms.CharField(
         max_length=1000,
         widget=forms.Textarea(attrs={'cols': 60, 'rows': 20,

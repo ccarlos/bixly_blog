@@ -12,19 +12,18 @@ from bixly_blog.blog.utils import (smart_int, check_ranges, get_blog_info,
 from bixly_blog.blog.forms import BlogEntryForm
 
 
-@login_required
 def list_all(request):
     """List all blog entries stored in our database."""
+
     entries = BlogEntry.objects.all()
     data = {'entries': paginate_objects(request, entries),
-            'blog_info': get_blog_info()}
+            'blog_info': get_blog_info(), 'action_str': 'All Blogs Shown'}
 
-    return render_to_response('blog/list_all.html', data,
+    return render_to_response('blog/list_entries.html', data,
                               context_instance=get_rq(request))
 
 
 @require_http_methods(['GET'])
-@login_required
 def choose_filter(request):
     """Determine which url to redirect user to, given GET variables."""
 
@@ -48,7 +47,7 @@ def choose_filter(request):
     data = {'blog_info': get_blog_info(), 'errors': errors, 'mon_sel': month,
             'yr_sel': year}
     if errors:
-        return render_to_response('blog/list_all.html', data,
+        return render_to_response('blog/list_entries.html', data,
                                   context_instance=get_rq(request))
 
     kwargs = {}
@@ -63,7 +62,6 @@ def choose_filter(request):
     return HttpResponseRedirect(reverse(url_str, kwargs=kwargs))
 
 
-@login_required
 def filter(request, year=None, month=None):
     """Allow users to filter entries by year or year & month."""
 
@@ -82,14 +80,15 @@ def filter(request, year=None, month=None):
     else:
         errors.append('A Year or Year/Month combination is needed.')
 
+    search_str = 'You searched for Year: %s - Month: %s.' % (year, month)
     data = {'blog_info': get_blog_info(), 'errors': errors, 'mon_sel': month,
-            'yr_sel': year}
+            'yr_sel': year, 'action_str': search_str}
 
     if not errors:
         entries = BlogEntry.objects.filter(**kwargs)
         data.update({'entries': paginate_objects(request, entries)})
 
-    return render_to_response('blog/list_all.html', data,
+    return render_to_response('blog/list_entries.html', data,
                               context_instance=get_rq(request))
 
 
@@ -114,6 +113,12 @@ def new(request):
 
 
 def single(request, entry_pk=None):
+    """Display a single BlogEntry.
+
+    Has tag links if any and a comment submission form.
+
+    """
+
     entry = get_object_or_404(BlogEntry, pk=entry_pk)
 
     data = {'entry': entry, 'blog_info': get_blog_info()}
@@ -126,10 +131,11 @@ def tagged_entries(request, tag_pk=None):
     tag = get_object_or_404(Tag, pk=tag_pk)
 
     entries = tag.blogentry_set.all()
-    data = {'entries': paginate_objects(request, entries), 'tag': tag,
-            'blog_info': get_blog_info()}
+    search_str = 'Tag search results for: %s' % (tag.tag)
+    data = {'entries': paginate_objects(request, entries),
+            'action_str': search_str, 'blog_info': get_blog_info()}
 
-    return render_to_response('blog/tag_search.html', data,
+    return render_to_response('blog/list_entries.html', data,
                               context_instance=get_rq(request))
 
 
@@ -140,6 +146,7 @@ def search(request):
     http://dev.mysql.com/doc/refman/4.1/en/fulltext-boolean.html
 
     """
+
     query = request.GET.get('q', '')
 
     if query:
@@ -151,8 +158,9 @@ def search(request):
     else:
         results = []
 
-    data = {'entries': paginate_objects(request, results), 'query': query,
-            'blog_info': get_blog_info()}
+    search_str = 'Search results for: %s' % (query)
+    data = {'entries': paginate_objects(request, results),
+            'action_str': search_str, 'blog_info': get_blog_info()}
 
-    return render_to_response('blog/search.html', data,
+    return render_to_response('blog/list_entries.html', data,
                               context_instance=get_rq(request))

@@ -40,7 +40,7 @@
             {% else %}{% ifequal field.name "honeypot" %}
               <label for="id_honeypot">Spambots<span class="small">Spammers type here</span></label>
               <input id="id_honeypot" type="text" name="honeypot">
-            {% endifequal %}{% endifequal %}{% endifequal %}
+            {% else %}<p style="display:none;">{{ field }}</p>{% endifequal %}{% endifequal %}{% endifequal %}
           {% endfor %}
           <input type="submit" name="submit" value="Post">
           <input type="hidden" name="next" value="{% url blog.single entry.pk %}" />
