@@ -37,7 +37,7 @@ class BlogEntryForm(forms.ModelForm):
         entry.is_markdown = self.is_markdown
         entry.save()
 
-        # TAGS processing. Associate tags with given BlogEntry.
+        # Tag processing. Associate tags with given BlogEntry.
         if self.tags:
             process_tags(entry.pk, self.tags)
 

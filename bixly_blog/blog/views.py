@@ -102,6 +102,7 @@ def new(request):
         form = BlogEntryForm(creator=request.user, data=data)
         if form.is_valid():
             form.save()
+            # Should we redirect to single entry view or to all?
             return HttpResponseRedirect(reverse('blog.list_all'))
     else:
         form = BlogEntryForm(creator=request.user)

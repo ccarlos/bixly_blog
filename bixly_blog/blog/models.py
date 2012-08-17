@@ -13,13 +13,6 @@ class Tag(models.Model):
     def __unicode__(self):
         return '%s' % (self.tag)
 
-    def save(self, *args, **kwargs):
-        # Fail silently on duplicate tags.
-        if Tag.objects.filter(tag=self.tag) or not self.tag:
-            return
-        else:
-            super(Tag, self).save(*args, **kwargs)
-
 
 class BlogEntry(models.Model):
     creator = models.ForeignKey(User)

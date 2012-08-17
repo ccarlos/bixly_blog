@@ -2,79 +2,80 @@
 <!DOCTYPE HTML">
 <html lang="en-us">
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/bixly_media/css/blog/style.css" />
-    <title>{% block title %}{% endblock %}</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/bixly_media/css/blog/style.css" />
+  <title>{% block title %}{% endblock %}</title>
 </head>
 
 <body>
-    {% block header %}
-    <header class="base">
-        <h1>Blogs R us</h1>
-    </header>
-    {% endblock %}
+  {% block header %}
+  <header class="base">
+    <h1>Blogs R us</h1>
+  </header>
+  {% endblock %}
 
-    {% block navigation %}
-    <nav class="base">
-        <ul>
-            <li><p>Welcome: {% if user.is_anonymous %}Guest{% else %}{{ user.username }}{% endif %}</p></li>
-            <li><a href="{% url blog.list_all %}">Blogs</a></li>
-            <li><a href="{% url blog.new %}">Create</a></li>
-            {% if not user.is_authenticated %}
-            <li><a href="{% url django.contrib.auth.views.login %}">Login</a></li>
-            {% else %}
-            <li><a href="{% url django.contrib.auth.views.logout_then_login %}">Logout</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% endblock %}
-
-    <form action="{% url blog.search %}" method="GET">
-      <label for="q">Search Blogs: </label>
-      <input type="text" name="q" value="{{ query }}">
-      <input type="submit" value="Search">
-    </form>
-
-    <h2>Filter Blog Entries.</h2>
-    <form action="{% url blog.choose_filter %}" method="GET">
-      Year
-      <select name="year">
-        {# TODO: Figure out why selected isn't working in if statement #}
-        <option value="" selected="selected"></option>
-        {% for year in blog_info.years %}
-        <option value="{{ year }}" {% if year == yr_sel %}selected{% endif %}>{{ year }}</option>
-        {% endfor %}
-      </select>
-      Month
-      <select name="month">
-        <option value="" selected="selected"></option>
-        {% for month in blog_info.months %}
-        <option value="{{ forloop.counter }}" {% if month == mon_sel %}selected{% endif %}>{{ month }}</option>
-        {% endfor %}
-      </select>
-      <input type="submit" value="Go"/>
-    </form>
-    {% if errors %}
-    <ul class="errorlist">
-      {% for error in errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
+  {% block navigation %}
+  <nav class="base">
+    <ul>
+      <li><p>Welcome: {% if user.is_anonymous %}Guest{% else %}{{ user.username }}{% endif %}</p></li>
+      <li><a href="{% url blog.list_all %}">Blogs</a></li>
+      <li><a href="{% url blog.new %}">Create</a></li>
+      {% if not user.is_authenticated %}
+      <li><a href="{% url django.contrib.auth.views.login %}">Login</a></li>
+      {% else %}
+      <li><a href="{% url django.contrib.auth.views.logout_then_login %}">Logout</a></li>
+      {% endif %}
     </ul>
-    {% endif %}
+  </nav>
+  {% endblock %}
 
-    <div id="content">
-        {% block content %}{% endblock %}
-    </div>
+  <form action="{% url blog.search %}" method="GET">
+    <label for="q">Search Blogs: </label>
+    <input type="text" name="q" value="{{ query }}">
+    <input type="submit" value="Search">
+  </form>
 
-    {% block pagination %}
-    {% endblock %}
+  <h2>Filter Blog Entries.</h2>
+  <form action="{% url blog.choose_filter %}" method="GET">
+    Year
+    <select name="year">
+      {# TODO: Figure out why selected isn't working in if statement #}
+      {# After submitting the form the defaults are selected. #}}
+      <option value="" selected="selected"></option>
+      {% for year in blog_info.years %}
+      <option value="{{ year }}" {% if year == yr_sel %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
+    Month
+    <select name="month">
+      <option value="" selected="selected"></option>
+      {% for month in blog_info.months %}
+      <option value="{{ forloop.counter }}" {% if month == mon_sel %}selected{% endif %}>{{ month }}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="Go"/>
+  </form>
+  {% if errors %}
+  <ul class="errorlist">
+    {% for error in errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 
-    {% block footer %}
-    <footer>
-        <hr>
-        <p>Copyright (c) 2012</p>
-    </footer>
-    {% endblock %}
+  <div id="content">
+    {% block content %}{% endblock %}
+  </div>
+
+  {% block pagination %}
+  {% endblock %}
+
+  {% block footer %}
+  <footer>
+    <hr>
+    <p>Copyright (c) 2012</p>
+  </footer>
+  {% endblock %}
 
 </body>
 </html>
