@@ -1,0 +1,185 @@
+NOTE: A User has to be defined in the admin to create BlogEntry's.
+
+Homepage: http://127.0.0.1:8000/
+Blog: http://127.0.0.1:8000/blog
+
+
+================================================================================
+Wishlist / TODO:
+
+* Style entire blog. The functionality is there, not the looks. 
+* Write tests.
+* Refactor python code and figure out how to organize all the utils.py functions.
+
+
+================================================================================
+Versions:
+
+Python - 2.7.1+ (r271:86832, Apr 11 2011, 18:13:53)  [GCC 4.5.2]
+MySQL - Server version: 5.1.54-1ubuntu4 (Ubuntu)
+Django - Django version 1.4, using settings 'bixly_blog.settings'
+
+
+================================================================================
+    [Add] 1.0 - Create Basic blog that displays all blog entries in our db.
+    
+    Project: bixly_blog
+    App: blog
+    Root URL of blog application:
+    http://127.0.0.1:8000/blog/
+    
+    Entries can be entered via:
+    http://127.0.0.1:8000/admin/
+    
+    A BlogEntry consits of the following fields:
+    creator(ForeignKey to User)
+    title(CharField)
+    body(TextField)
+    created(DateTimeField)
+
+    **UPDATE**
+    BlogEntry new fields: tags, is_markdown
+
+================================================================================
+    [Add] 2.0 - Style blog entries.
+    
+    Blog entries are inside article tags as such:
+    <div id="content">
+      <article class="entry">
+        <header class="h-entry">
+          Title
+          By
+          Published
+        </header>
+        Body
+      </article>
+    </div>
+
+    **UPDATE**
+    Refactored templates to reuse code.
+    Blog needs major styling(CSS)
+
+
+================================================================================
+    [Add] 3.0 - Allow users to filter entries by year or year/month.
+    
+    * Included a <form> in template to allow users to search entries.
+      Inside <form> we have a <select> tag with <option>'s to select
+      a year and/or month.
+    * View filter(request) takes in a year or year/month combination
+      to display entries. Appropriate checks are made to ensure we have
+      valid data.
+
+
+================================================================================
+    [Add] 4.0 - Paginate BlogEntry's.
+    
+    *  Fixed view(filter) urls to take in month or month/year.
+    *  Include pagination from django.core.paginator put functionality
+    in blog.utils as paginate_objects(request, objs)
+    *  Added view process_filter(request).
+
+    After a user submits the GET form to process_filter(), it will
+    determine which (filter)url to redirect user to. The url will then
+    determine how to call the view function filter(year=?, month=?).
+
+
+================================================================================
+    [Add] 5.0 - Users can now make a BlogEntry via a form.
+    
+    * Functionality can be found in: /blog/new/
+    * Used django ModelForm to save an Entry via a form.
+      Also, used to check title and body are valid.
+    * Included csrf in the view(new) which creates a new entry.
+    * Fixed timezone warning. Using django.utils.timezone.now instead
+      of python's datetime.now in blog.models.py.
+
+
+================================================================================
+    [Add] 6.0 - Allow entries to have multiple tags.
+    
+    * When creating a new BlogEntry, users have the option to add
+      comma separated tags. The relationship is handled when the
+      BlogEntryForm is saved.
+    * Added model Tag.
+    * Added a field in the model BlogEntry:
+        tags - models.ManytoMany(Tag)
+    * Currently: tags are only available to view when viewing a single
+      BlogEntry.
+
+
+================================================================================
+    [Add] 7.0 - Comment on BlogEntry's.
+    
+    * Added single view which allows for comments on entry's.
+    * Comment form was styled. Included a honeypot field to prevent spam.
+    * List of comments on entry's needs to be styled.
+    * Included a template tag 'reverse' used for displaying comments in
+      DESC order. Located in blog.templatetags.blog_extras.py
+
+
+================================================================================
+    [Add] 8.0 - Include login and logout functionality.
+    
+    * Multiple users can login and logout.
+    * Added decorator @login_required to most views.
+    * Passed in request context into templates, to use {{ user }}.
+
+     **UPDATE**
+     Allowed anonymous users to browse entries. 
+
+
+================================================================================
+    [Add] 9.0 - Markdown support.
+    
+    * Use: markdown2 - https://github.com/trentm/python-markdown2/
+    * Add an extra boolean field to the model BlogEntry (is_markdown).
+    * When creating an entry a user has the option to check "Is Markdown?"
+      If yes, process the textarea as markdown2 by overriding BlogEntry's
+      save() method.
+
+    **UPDATE** Remove overridden Tag.save() method.
+       -> https://groups.google.com/forum/?fromgroups#!topic/django-users/R2XETe3Fg4
+
+
+================================================================================
+    [Add] 10.0 - Add Search Tool.
+    
+    * Searches a BlogEntry's title and body fields.
+    * Since we are using mysql: can use "fieldname__search"" for QuerySet lookups.
+
+
+================================================================================
+Project Tree:
+
+bixly_blog/
+├── bixly_blog
+│   ├── blog
+│   │   ├── admin.py
+│   │   ├── forms.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── templatetags
+│   │   │   ├── blog_extras.py
+│   │   │   └── __init__.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   ├── utils.py
+│   │   └── views.py
+│   ├── __init__.py
+│   ├── media
+│   │   └── css
+│   │       └── blog
+│   │           └── style.css
+│   ├── settings.py
+│   ├── templates
+│   │   ├── blog
+│   │   │   ├── base.html
+│   │   │   ├── list_entries.html
+│   │   │   ├── new_blog.html
+│   │   │   └── single.html
+│   │   └── registration
+│   │       └── login.html
+│   ├── urls.py
+│   └── wsgi.py
+└── manage.py
