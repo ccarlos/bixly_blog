@@ -1,0 +1,91 @@
+body {
+  background-color: #eeeeee;
+  color: #111111;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+h1 {
+  color: #111111;
+  font: bold 24px "Century Gothic", "Gills Sans", Arial, sans-serif;
+  text-align: center;
+  text-shadow: 1px 1px 1px #999999;
+  border-bottom: thick solid;
+  margin: 15px;
+}
+nav {
+  margin: 15px;
+}
+nav ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+nav ul li {
+  display: inline;
+  font-variant: small-caps;
+  letter-spacing: 2px;
+  border-right: 1px solid #999999;
+  margin-right: 10px;
+  padding-right: 10px;
+}
+nav ul li:last-child {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+nav a {
+  color: #111;
+  text-decoration: none;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+#content {
+  float: inherit;
+}
+p.errors {
+  color: red;
+  text-align: center;
+  font-weight: bolder;
+}
+#subForm {
+  font-size: .8em;
+  border: 1px solid #3b6e22;
+  color: #666666;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+#subForm .label{
+  float: left;
+  width: 230px;
+  margin-right: 10px;
+  text-align: right;
+  font-weight: bold;
+  clear: left;
+}
+#subForm input {
+  margin-top: 3px;
+}
+#submit {
+  margin-left: 240px;
+  background-color: #cbd893;
+  font-family: "Century Gothic", "Gill Sans", Arial, sans-serif;
+}
+#username, #password {
+  background-color: #fbef99;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: .9em;
+  width: 300px;
+  margin-top: -2px;
+}
+#username:focus, #password:focus {
+  background-color: #fdd041;
+}
+footer {
+  clear: both;
+  display: block;
+  font-size: 90%;
+  font-style: italic;
+  font-variant: small-caps;
+  padding-top: 10px;
+  float: left;
+}
