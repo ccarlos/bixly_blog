@@ -73,8 +73,7 @@ input.search-go:hover {
   background: url(/bixly_media/images/search-icon.png) no-repeat bottom left;
 }
 ul.errorlist {
-    margin: 0;
-    padding: 0;
+    margin: 10px;
 }
 .errorlist li {
     background-color: red;
@@ -123,6 +122,18 @@ a {
 }
 a:hover {
   text-decoration: underline;
+}
+.new-blog {
+  margin-top: 25px;
+  float: right;
+}
+.new-blog ul {
+  list-style: none;
+  text-align: center;
+}
+.new-blog ul li {
+  display: inline;
+  font-variant: small-caps;
 }
 footer {
   clear: both;
