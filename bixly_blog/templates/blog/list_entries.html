@@ -11,13 +11,13 @@
     {% for blog in entries %}
       <article class="entry">
         <header class="h-entry">
-          <h1><a href="{% url blog.single blog.pk %}">{{ blog.title }}</a></h1>
-          <h3>By: {{ blog.creator }}</h3>
-          <h3>Published: {{ blog.created|date:"M-d-Y" }}</h3>
+          <p class="date">{{ blog.created|date:"M d, Y" }}</p>
+          <h1 class="title"><a href="{% url blog.single blog.pk %}">{{ blog.title }}</a></h1>
+          <p class="author">Created by: {{ blog.creator }}</p>
         </header>
-        <p>{{ blog.body|safe }}<p>
+        <p class="blog-body">{{ blog.body|safe }}<p>
         {% get_comment_count for blog as c_count %}
-        <p>{{ c_count }} comments. <a href="{% url blog.single blog.pk %}">Add Comment</a></p>
+        <p><a href="{% url blog.single blog.pk %}">{{ c_count }} Comment(s)</a></p>
       </article>
     {% endfor %}
   {% else %}
@@ -34,7 +34,7 @@
         {% endif %}
 
         <span class="current">
-          Page {{ entries.number }} of {{ entries.paginator.num_pages }}.
+          Page {{ entries.number }} of {{ entries.paginator.num_pages }}
         </span>
 
         {% if entries.has_next %}

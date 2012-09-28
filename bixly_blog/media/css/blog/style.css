@@ -1,3 +1,77 @@
+body {
+  background-color: #eeeeee;
+  color: #111111;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 95%;
+}
+nav ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+  margin-bottom: 16px;
+}
+nav ul li {
+  display: inline;
+  font-variant: small-caps;
+  letter-spacing: 2px;
+  border-right: 1px solid #999999;
+  margin-right: 10px;
+  padding-right: 10px;
+}
+
+nav ul li:last-child {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+nav ul li:first-child {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav a {
+  color: #111;
+  text-decoration: none;
+}
+nav a:hover, nav .current a {
+  text-decoration: underline;
+}
+
+.search-box {
+  background:url(/bixly_media/images/search-box.gif) no-repeat top left;
+  height: 26px;
+  padding: 5px 0 0 10px;
+  width: 165px;
+  float: right;
+  clear: both;
+  display: block;
+}
+input.search-field {
+  float: left;
+  border: 0;
+  margin: 0;
+  font-family: tahoma;
+  font-size: 12px;
+  padding: 3px 0px 0px 4px;
+  height: 18px;
+  background: #ffffff url(/bixly_media/images/search-form.png) no-repeat top left;
+  width: 123px;
+}
+input.search-go {
+  float: left;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  margin-left: 5px;
+  height: 21px;
+  width: 21px;
+  background: url(/bixly_media/images/search-icon.png) no-repeat top left;
+  cursor: pointer;
+}
+input.search-go:hover {
+  background: url(/bixly_media/images/search-icon.png) no-repeat bottom left;
+}
 ul.errorlist {
     margin: 0;
     padding: 0;
@@ -10,44 +84,54 @@ ul.errorlist {
     margin: 0 0 3px;
     padding: 4px 5px;
 }
-header {
-    padding: 2em 11em;
-}
-header.base {
-    background: none repeat scroll 0 0 #667755;
-    padding: 2em 11em;
-}
 header.base h1{
-    text-align: center;
-}
-nav.base ul{
-    list-style-type:none;
-    margin:0;
-    padding:15px;
-    text-align: center;
-}
-nav.base ul li{
-    display:inline;
+  color: #111111;
+  font: bold 24px "Century Gothic", "Gills Sans", Arial, sans-serif;
+  text-align: center;
+  text-shadow: 1px 1px 1px #999999;
+  border-bottom: thick solid;
+  margin: 15px;
 }
 article {
-    padding: 20px 20px;
-    border: 1px solid black;
+  border: 1px solid black;
+  padding: 12px;
 }
-#content .entry .h-entry h1{
-    text-align: center;
+article.entry {
+  margin: 19px;
 }
-#content .entry .h-entry h3{
-    text-align: center;
-    font-style: italic;
+article.entry .h-entry .date {
+  float: right;
+  font-variant: small-caps;
+  clear: both;
+  display: block;
 }
-#content .entry p{
-    margin-left: 20px;
-    text-indent: 1.5em;
-    border: 1px solid green;
-    font-style: bold;
+article.entry .h-entry .title {
+  text-align: center;
+  margin-bottom: 12px;
 }
-footer p{
-    text-align: right;
+article.entry .h-entry .author {
+  text-align: right;
+  font-variant: small-caps;
+  font-style: italic;
+}
+article.entry .blog-body {
+  text-indent: 30px;
+}
+a {
+  color: #111;
+  margin-bottom: 16px;
+}
+a:hover {
+  text-decoration: underline;
+}
+footer {
+  clear: both;
+  display: block;
+  font-size: 90%;
+  font-style: italic;
+  font-variant: small-caps;
+  padding-top: 10px;
+  float: left;
 }
 
 /* http://woork.blogspot.com/2008/06/clean-and-pure-css-form-design.html */

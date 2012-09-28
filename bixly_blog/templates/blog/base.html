@@ -3,6 +3,7 @@
 <html lang="en-us">
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="/bixly_media/css/blog/reset.css" />
   <link rel="stylesheet" href="/bixly_media/css/blog/style.css" />
   <title>{% block title %}{% endblock %}</title>
 </head>
@@ -10,7 +11,7 @@
 <body>
   {% block header %}
   <header class="base">
-    <h1>Blogs R us</h1>
+    <h1>BlogsRus</h1>
   </header>
   {% endblock %}
 
@@ -29,15 +30,15 @@
   </nav>
   {% endblock %}
 
-  <form action="{% url blog.search %}" method="GET">
-    <label for="q">Search Blogs: </label>
-    <input type="text" name="q" value="{{ query }}">
-    <input type="submit" value="Search">
-  </form>
+  <div class="search-box">
+    <form action="{% url blog.search %}" method="GET">
+      <input type="text" name="q" value="{{ query }}" class="search-field">
+      <input type="submit" value="" class="search-go">
+    </form>
+  </div>
 
-  <h2>Filter Blog Entries.</h2>
   <form action="{% url blog.choose_filter %}" method="GET">
-    Year
+    <strong>Filter by:</strong> Year
     <select name="year">
       {# TODO: Figure out why selected isn't working in if statement #}
       {# After submitting the form the defaults are selected. #}}
@@ -72,8 +73,7 @@
 
   {% block footer %}
   <footer>
-    <hr>
-    <p>Copyright (c) 2012</p>
+    <p>Copyright &copy; 2012</p>
   </footer>
   {% endblock %}
 
