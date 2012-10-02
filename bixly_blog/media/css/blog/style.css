@@ -98,6 +98,9 @@ article {
 article.entry {
   margin: 19px;
 }
+article.comment {
+  margin: 19px;
+}
 article.entry .h-entry .date {
   float: right;
   font-variant: small-caps;
@@ -113,8 +116,16 @@ article.entry .h-entry .author {
   font-variant: small-caps;
   font-style: italic;
 }
+article.comment .h-comment .author {
+  text-align: right;
+  font-variant: small-caps;
+  font-style: italic;
+}
 article.entry .blog-body {
   text-indent: 30px;
+}
+article.comment .com-body {
+  text-indent: 20px;
 }
 a {
   color: #111;
@@ -135,6 +146,21 @@ a:hover {
   display: inline;
   font-variant: small-caps;
 }
+.tag-list {
+  list-style: none;
+  display: inline;
+}
+.tag-list li {
+  display: inline;
+  font-variant: small-caps;
+  margin: -8px;
+}
+.tag-list a {
+  font-size: 90%;
+}
+.tags {
+  margin-top: 10px;
+}
 footer {
   clear: both;
   display: block;
@@ -146,63 +172,57 @@ footer {
 }
 
 /* http://woork.blogspot.com/2008/06/clean-and-pure-css-form-design.html */
-.spacer{clear:both; height:1px;}
-
-.myform{
-margin:0 auto;
-width:400px;
-padding:14px;
+.spacer{
+  clear:both;
+  height:1px;
+}
+.myform {
+  margin: 0 auto;
+  width: 465px;
+  padding: 14px;
 }
 
 /* ----------- stylized ----------- */
 #stylized{
-border:solid 2px #b7ddf2;
-background:#ebf4fb;
+  border:solid 2px #585858;
+  background: #A0A0A0;
 }
 #stylized h1 {
-font-size:14px;
-font-weight:bold;
-margin-bottom:8px;
+  font-size:14px;
+  font-weight:bold;
+  margin-bottom:8px;
+  text-align: right;
 }
-#stylized p{
-font-size:11px;
-color:#666666;
-margin-bottom:20px;
-border-bottom:solid 1px #b7ddf2;
-padding-bottom:10px;
+#stylized p {
+  font-size:11px;
+  color:#666666;
+  margin-bottom:20px;
+  border-bottom:solid 1px #b7ddf2;
+  padding-bottom:10px;
 }
-#stylized label{
-display:block;
-font-weight:bold;
-text-align:right;
-width:140px;
-float:left;
+#stylized label {
+  display:block;
+  font-weight:bold;
+  text-align:right;
+  width:140px;
+  float:left;
 }
-#stylized .small{
-color:#666666;
-display:block;
-font-size:11px;
-font-weight:normal;
-text-align:right;
-width:140px;
+#stylized .small {
+  color:#666666;
+  display:block;
+  font-size:11px;
+  font-weight:normal;
+  text-align:right;
+  width:140px;
 }
-#stylized input{
-float:left;
-font-size:12px;
-padding:4px 2px;
-border:solid 1px #aacfe4;
-width:200px;
-margin:2px 0 20px 10px;
+#stylized input {
+  float:left;
+  font-size:12px;
+  padding:4px 2px;
+  border:solid 1px #aacfe4;
+  width:200px;
+  margin:2px 0 20px 8px;
 }
-#stylized button{
-clear:both;
-margin-left:150px;
-width:125px;
-height:31px;
-background:#666666 url(img/button.png) no-repeat;
-text-align:center;
-line-height:31px;
-color:#FFFFFF;
-font-size:11px;
-font-weight:bold;
+#stylized input.submit {
+  float:right;
 }

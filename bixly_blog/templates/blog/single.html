@@ -7,51 +7,59 @@
 {% block title %}Single Blog Displayed{% endblock %}
 
 {% block content %}
-    {% if entry %}
-      {% get_comment_count for entry as comment_count %}
-      total coms: {{comment_count}}
-      <article class="entry">
-          <header class="h-entry">
-              <h1>{{ entry.title }}</h1>
-              <h3>By: {{ entry.creator }}</h3>
-              <h3>Published: {{ entry.created|date:"M-d-Y" }}</h3>
-          </header>
-          <p>{{ entry.body|safe }}<p>
-          <p>Tags:
-            {% for tag in entry.tags.all %}
-              <ul>
-                <li><a href="{% url blog.tagged tag.pk %}">{{ tag.tag }}</a></li>
-              </ul>
-            {% endfor %}
-          </p>
-      </article>
-      {% get_comment_form for entry as form %}
-      <div id="stylized" class="myform">
-        <h1>Add Comment</h1>
-        <form id="form" action="{% comment_form_target %}" method="post">
-          {% csrf_token %}
-          {% for field in form %}
-            {% ifequal field.name "name" %}
-              <label for="id_name" type="text" maxlength="50" name="name">Name<span class="small">Add Name</label>
-              <input id="id_name" name="name"/>
-            {% else %}{% ifequal field.name "comment" %}
-              <label for="id_comment">Comment<span class="small">Add Comment</label>
-              <textarea id="id_comment" name="comment" cols="40" rows="10"/></textarea>
-            {% else %}{% ifequal field.name "honeypot" %}
-              <label for="id_honeypot">Spambots<span class="small">Spammers type here</span></label>
-              <input id="id_honeypot" type="text" name="honeypot">
-            {% else %}<p style="display:none;">{{ field }}</p>{% endifequal %}{% endifequal %}{% endifequal %}
-          {% endfor %}
-          <input type="submit" name="submit" value="Post">
-          <input type="hidden" name="next" value="{% url blog.single entry.pk %}" />
-          <div class="spacer"></div>
-        </form>
-      </div>
-      Comments:
-      {% get_comment_list for entry as comment_list %}
-        {% for comm in comment_list|reverse %}
-          <p>Posted by: {{ comm.user_name }} on {{ comm.submit_date }}.</p>
-          <p>Comment: {{ comm.comment }}</p>
+  {% if entry %}
+    {% get_comment_count for entry as comment_count %}
+    <article class="entry">
+      <header class="h-entry">
+        <p class="date">{{ entry.created|date:"M-d-Y" }}</p>
+        <h1 class="title">{{ entry.title }}</h1>
+        <p class="author">Created by: {{ entry.creator }}</p>
+      </header>
+      <p class="blog-body">{{ entry.body|safe }}<p>
+      {% if entry.tags.all %}
+      <p class="tags">Tags:
+        {% for tag in entry.tags.all %}
+          <ul class="tag-list">
+            <li><a href="{% url blog.tagged tag.pk %}">{{ tag.tag }}</a></li>
+          </ul>
         {% endfor %}
+      </p>
+      {% endif %}
+    </article>
+
+    {% get_comment_form for entry as form %}
+    <div id="stylized" class="myform">
+      <h1>Add Comment</h1>
+      <form id="form" action="{% comment_form_target %}" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          {% ifequal field.name "name" %}
+            <label for="id_name" type="text" maxlength="50" name="name">Name<span class="small"></label>
+            <input id="id_name" name="name"/>
+          {% else %}{% ifequal field.name "comment" %}
+            <label for="id_comment">Comment</label>
+            <textarea id="id_comment" name="comment" cols="40" rows="10"/></textarea>
+          {% else %}{% ifequal field.name "honeypot" %}
+            <label for="id_honeypot">Spambots<span class="small">Spammers type here</span></label>
+            <input id="id_honeypot" type="text" name="honeypot">
+          {% else %}<p style="display:none;">{{ field }}</p>{% endifequal %}{% endifequal %}{% endifequal %}
+        {% endfor %}
+        <input class="submit" type="submit" name="submit" value="Post">
+        <input type="hidden" name="next" value="{% url blog.single entry.pk %}" />
+        <div class="spacer"></div>
+      </form>
+    </div>
+    {% get_comment_list for entry as comment_list %}
+    {% if comment_list %}
+      {% for comm in comment_list|reverse %}
+        <article class="comment">
+          <header class="h-comment">
+            <p class="date">{{ comm.submit_date|date:"M d, Y" }}</p>
+            <p class="author">By: {{ comm.user_name }}</p>
+          </header>
+          <p class="com-body">{{ comm.comment|safe }}<p>
+        </article>
+      {% endfor %}
     {% endif %}
+  {% endif %}
 {% endblock %}
