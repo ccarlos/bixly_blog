@@ -1,0 +1,21 @@
+{# vim: set ts=2 et sts=2 sw=2: #}
+{% extends "blog/base.html" %}
+
+{% block title %}{{ action_str }}{% endblock %}
+
+{% block content %}
+  {% if form.errors %}
+    <p style="color: red;">
+      Please correct the error{{ form.errors|pluralize }} below.
+    </p>
+  {% endif %}
+
+  <form class="new-blog" method="POST" action="{% url blog.edit_comment comm.pk %}">
+    {% csrf_token %}
+    <div>{{ comment_form.body.errors }} {{ comment_form.body }}</div>
+    <ul class="new-blog">
+      <li><input name="publish" type="submit" value="Publish"/></li>
+      <li><input name="reset" type="reset" value="Reset"/></li>
+    </ul>
+  </form>
+{% endblock %}

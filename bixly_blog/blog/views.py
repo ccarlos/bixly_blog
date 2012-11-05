@@ -1,15 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.http import require_http_methods
 
-from bixly_blog.blog.models import BlogEntry, Tag
+from bixly_blog.blog.models import BlogEntry, Tag, BlogComment, BlogCommentLike
 from bixly_blog.blog.utils import (smart_int, check_ranges, get_blog_info,
                                    paginate_objects, get_rq)
-from bixly_blog.blog.forms import BlogEntryForm
+from bixly_blog.blog.forms import BlogEntryForm, BlogCommentForm
 
 
 def list_all(request):
@@ -113,7 +114,7 @@ def new(request):
                               context_instance=get_rq(request))
 
 
-def single(request, entry_pk=None):
+def single(request, entry_pk=None, comment_form=None):
     """Display a single BlogEntry.
 
     Has tag links if any and a comment submission form.
@@ -122,7 +123,11 @@ def single(request, entry_pk=None):
 
     entry = get_object_or_404(BlogEntry, pk=entry_pk)
 
-    data = {'entry': entry, 'blog_info': get_blog_info()}
+    if not comment_form:
+        comment_form = BlogCommentForm(creator=request.user, blog=entry)
+
+    data = {'entry': entry, 'blog_info': get_blog_info(),
+            'comment_form': comment_form}
     return render_to_response('blog/single.html', data,
                               context_instance=get_rq(request))
 
@@ -165,3 +170,88 @@ def search(request):
 
     return render_to_response('blog/list_entries.html', data,
                               context_instance=get_rq(request))
+
+
+@login_required
+@require_http_methods(['POST'])
+def add_comment(request, entry_pk):
+    """Add a comment to a blog entry, given its id."""
+
+    blog = get_object_or_404(BlogEntry, pk=entry_pk)
+
+    if not request.user.is_authenticated():
+        raise PermissionDenied
+
+    form = BlogCommentForm(creator=request.user, blog=blog, data=request.POST)
+
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(blog.get_absolute_url())
+
+    return single(request, entry_pk=entry_pk, comment_form=form)
+
+
+@login_required
+@require_http_methods(['POST'])
+def remove_comment(request, comm_pk):
+    """Delete a comment. Only allow if user is creator of comment or blog."""
+
+    comm = get_object_or_404(BlogComment, pk=comm_pk)
+
+    blog = comm.blog
+
+    # Check whether user is comment.creator or blog.creator
+    if comm.creator != request.user and blog.creator != request.user:
+        raise PermissionDenied
+
+    comm.delete()
+
+    return HttpResponseRedirect(reverse('blog.single',
+                                        kwargs={'entry_pk': blog.pk}))
+
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def edit_comment(request, comm_pk):
+    """Edit a comment."""
+
+    comm = get_object_or_404(BlogComment, pk=comm_pk)
+
+    # Check whether request.user is comment.creator.
+    if comm.creator != request.user:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        data = request.POST
+        form = BlogCommentForm(creator=comm.creator, blog=comm.blog,
+                               data=data, instance=comm)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(comm.blog.get_absolute_url())
+    else:
+        form = BlogCommentForm(creator=comm.creator, blog=comm.blog,
+                               instance=comm)
+
+    data = {'action_str': 'Edit Comment', 'blog_info': get_blog_info(),
+            'comm': comm, 'comment_form': form}
+
+    return render_to_response('blog/edit_comment.html', data,
+                              context_instance=get_rq(request))
+
+
+# TODO: rename to like_dislike_comment.
+# TODO: Separate like and dislike. Dislike should subtract from a count.
+@login_required
+@require_http_methods(['POST'])
+def like_comment(request, comm_pk):
+    comm = get_object_or_404(BlogComment, pk=comm_pk)
+
+    # Has the user liked the comment object?
+    like = comm.likes.filter(creator=request.user)
+    if not like:
+        BlogCommentLike.objects.create(creator=request.user, comm=comm)
+    else:
+        like.delete()
+
+    return HttpResponseRedirect(reverse('blog.single',
+                                        kwargs={'entry_pk': comm.blog.pk}))

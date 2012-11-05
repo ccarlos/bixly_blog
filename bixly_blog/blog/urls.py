@@ -16,4 +16,14 @@ urlpatterns = patterns('bixly_blog.blog.views',
     # Search urls.
     url(r'^tagged/(?P<tag_pk>\d+)$', 'tagged_entries', name='blog.tagged'),
     url(r'^search$', 'search', name='blog.search'),
+
+    # Comment urls.
+    url(r'^entry/(?P<entry_pk>\d+)/comment$', 'add_comment',
+        name='blog.comment'),
+    url(r'^remove_comment/(?P<comm_pk>\d+)$', 'remove_comment',
+        name='blog.remove_comment'),
+    url(r'^edit_comment/(?P<comm_pk>\d+)$', 'edit_comment',
+        name='blog.edit_comment'),
+    url(r'^like_comment/(?P<comm_pk>\d+)$', 'like_comment',
+        name='blog.like_comment'),
 )

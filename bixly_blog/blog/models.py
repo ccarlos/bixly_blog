@@ -37,3 +37,35 @@ class BlogEntry(models.Model):
         verbose_name = 'Blog entry'
         verbose_name_plural = 'Blog entries'
         ordering = ['-created']
+
+
+class BlogCommentManager(models.Manager):
+    """Sort comment by the number of likes. DESC order."""
+    def get_by_liked(self):
+        return sorted(BlogComment.objects.all(), key=lambda x: x.likes.count(),
+                      reverse=True)
+
+
+class BlogComment(models.Model):
+    blog = models.ForeignKey(BlogEntry, related_name='comments')
+    body = models.TextField(max_length=1000)
+    creator = models.ForeignKey(User, related_name='posted_comments')
+    created = models.DateTimeField(db_index=True, default=timezone.now)
+    objects = BlogCommentManager()
+
+    class Meta:
+        ordering = ['-created']
+        verbose_name = 'Blog comment'
+        verbose_name_plural = 'Blog comments'
+
+
+class BlogCommentLike(models.Model):
+    creator = models.ForeignKey(User, related_name='comment_likes')
+    comm = models.ForeignKey(BlogComment, related_name='likes')
+    created = models.DateTimeField(db_index=True, default=timezone.now)
+
+    def __unicode__(self):
+        return u'%s liked %s' % (self.creator, self.comm)
+
+    class Meta(object):
+        unique_together = ('creator', 'comm')

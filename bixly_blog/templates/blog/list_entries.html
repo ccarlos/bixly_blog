@@ -1,8 +1,6 @@
 {# vim: set ts=2 et sts=2 sw=2: #}
 {% extends "blog/base.html" %}
 
-{% load comments %}
-
 {% block title %}{{ action_str }}{% endblock %}
 
 {% block content %}
@@ -16,8 +14,7 @@
           <p class="author">Created by: {{ blog.creator }}</p>
         </header>
         <p class="blog-body">{{ blog.body|safe }}<p>
-        {% get_comment_count for blog as c_count %}
-        <p><a href="{% url blog.single blog.pk %}">{{ c_count }} Comment(s)</a></p>
+        <p><a href="{% url blog.single blog.pk %}">{{ blog.comments.count }} Comment(s)</a></p>
       </article>
     {% endfor %}
   {% else %}

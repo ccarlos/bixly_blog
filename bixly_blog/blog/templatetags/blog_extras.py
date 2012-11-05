@@ -12,3 +12,14 @@ def reverse(value):
 
     value.reverse()
     return value
+
+
+@register.filter
+def liked_comment(value, arg):
+    """Has the user liked the comment?"""
+
+    like = value.likes.filter(creator=arg)
+
+    if like:
+        return True
+    return False

@@ -1,6 +1,6 @@
 from django import forms
 
-from bixly_blog.blog.models import BlogEntry
+from bixly_blog.blog.models import BlogEntry, BlogComment
 from bixly_blog.blog.utils import process_tags
 
 
@@ -42,3 +42,32 @@ class BlogEntryForm(forms.ModelForm):
             process_tags(entry.pk, self.tags)
 
         return entry
+
+
+class BlogCommentForm(forms.ModelForm):
+    body = forms.CharField(
+        max_length=1000,
+        widget=forms.Textarea(attrs={'cols': 60, 'rows': 20,
+                                     'placeholder': 'Enter Comment...'}))
+
+    class Meta:
+        model = BlogComment
+        fields = ('body',)
+
+    def __init__(self, blog, creator, data=None, *args, **kwargs):
+        self.blog = blog
+        self.creator = creator
+        if data:
+            data = data.copy()
+            data.update({'creator': creator.pk})
+        super(BlogCommentForm, self).__init__(data=data, *args, **kwargs)
+
+    def save(self, commit=True, *args, **kwargs):
+        comm = super(BlogCommentForm, self).save(*args, commit=False, **kwargs)
+
+        if commit:
+            comm.blog = self.blog
+            comm.creator = self.creator
+            comm.save()
+
+        return comm

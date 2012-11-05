@@ -1,14 +1,12 @@
 {# vim: set ts=2 et sts=2 sw=2: #}
 {% extends "blog/base.html" %}
 
-{% load comments %}
 {% load blog_extras %}
 
 {% block title %}Single Blog Displayed{% endblock %}
 
 {% block content %}
   {% if entry %}
-    {% get_comment_count for entry as comment_count %}
     <article class="entry">
       <header class="h-entry">
         <p class="date">{{ entry.created|date:"M-d-Y" }}</p>
@@ -27,39 +25,41 @@
       {% endif %}
     </article>
 
-    {% get_comment_form for entry as form %}
     <div id="stylized" class="myform">
       <h1>Add Comment</h1>
-      <form id="form" action="{% comment_form_target %}" method="post">
+      <form id="form" action="{% url blog.comment entry.pk %}" method="post">
         {% csrf_token %}
-        {% for field in form %}
-          {% ifequal field.name "name" %}
-            <label for="id_name" type="text" maxlength="50" name="name">Name<span class="small"></label>
-            <input id="id_name" name="name"/>
-          {% else %}{% ifequal field.name "comment" %}
-            <label for="id_comment">Comment</label>
-            <textarea id="id_comment" name="comment" cols="40" rows="10"/></textarea>
-          {% else %}{% ifequal field.name "honeypot" %}
-            <label for="id_honeypot">Spambots<span class="small">Spammers type here</span></label>
-            <input id="id_honeypot" type="text" name="honeypot">
-          {% else %}<p style="display:none;">{{ field }}</p>{% endifequal %}{% endifequal %}{% endifequal %}
-        {% endfor %}
+        {{ comment_form.body.errors }}
+        {{ comment_form.body }}
         <input class="submit" type="submit" name="submit" value="Post">
         <input type="hidden" name="next" value="{% url blog.single entry.pk %}" />
         <div class="spacer"></div>
       </form>
     </div>
-    {% get_comment_list for entry as comment_list %}
-    {% if comment_list %}
-      {% for comm in comment_list|reverse %}
-        <article class="comment">
-          <header class="h-comment">
-            <p class="date">{{ comm.submit_date|date:"M d, Y" }}</p>
-            <p class="author">By: {{ comm.user_name }}</p>
-          </header>
-          <p class="com-body">{{ comm.comment|safe }}<p>
-        </article>
-      {% endfor %}
-    {% endif %}
+
+    {% for comm in entry.comments.get_by_liked %}
+      <article class="comment">
+        <header class="h-comment">
+          <p class="date">{{ comm.created|date:"M-d-Y" }}</p>
+          <p class="author">By: {{ comm.creator }}</p>
+        </header>
+        <p class="com-body">{{ comm.body|safe }}</p>
+        <p>
+          <a href="{% url blog.edit_comment comm.pk %}">Edit Comment</a>
+          {# only blog owners or comment creators can delete comments #}
+          {% if blog.creator == user or comm.creator == user %}
+            <form action="{% url blog.remove_comment comm.pk %}" method="POST">
+              {% csrf_token %}
+              <input class="plain-submit delete" type="submit" value="{{ _('Delete') }}"/>
+            </form>
+          {% endif %}
+          <form action="{% url blog.like_comment comm.pk %}" method="POST">
+            {% csrf_token %}
+            <input class="plain-submit delete" type="submit" value="{% if comm|liked_comment:user %}{{ _('Dislike') }}{% else %}{{ _('Like') }}{% endif %}"/>
+          </form>
+          <p>{{ comm.likes.count }} Likes</p>
+        </p>
+      </article>
+    {% endfor %}
   {% endif %}
 {% endblock %}
